@@ -3,15 +3,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-DO</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
 </head>
 <body>
     <!--
         algorithm : 
             step-one : click on add to-do button.
-            step-two : add to-do to array if not empty.
+            step-two : add to-do to array if input is not empty.
             step-three : display array dynamically on page with completed and delete button on the side.
             step-four : save list to local memory.
             step-five : clear input bar.
     -->
+
+    <input class="input" type="text" placeholder="add your todo">
+    <button onclick="addToDo()">Add</button>
+
+    <h3>Tasks</h3>
+    <ul class="toDoList"></ul>
 </body>
 </html>
