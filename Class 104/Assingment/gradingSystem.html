@@ -1,0 +1,111 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRADING SYSTEM</title>
+    <style>
+        table {
+            width: 80%;
+            margin: auto;
+            text-align: center;
+            border-spacing: 0;
+            
+        }
+        th{
+            background-color: rgb(0, 0, 0);
+            color: white;
+            
+            padding: 10px;
+            border: 1px solid rgb(202, 1, 1)
+        }
+        td {
+            background-color: rgb(255, 255, 255);
+            color: black;
+
+            padding: 10px;
+            border: 1px solid rgb(202, 1, 1);
+        }
+    </style>
+</head>
+<body>
+
+    <table class="table"></table>
+
+    <script>
+        const students = [
+            {fistName: "Mohammed", grades : [87, 91, 92, 81, 80, 78, 65]},
+            {fistName: "Ahmed", grades : [82, 71, 99, 91, 85, 88, 75]},
+            {fistName: "Saeed", grades : [97, 91, 92, 91, 90, 98, 95]},
+            {fistName: "Khalid", grades : [27, 71, 52, 61, 60, 68, 65]}
+        ]
+
+        let getTotal = scores => scores.reduce((sum, score) => sum + score, 0);
+
+        let getAverage = scores => (getTotal(scores) / scores.length).toFixed(2);
+
+        let getGrades = scores => {
+        let averageScore = getAverage(scores);
+
+        if (averageScore > 90) return "A+"
+            if (averageScore > 80) return "A"
+            if (averageScore > 75) return "A-"
+            if (averageScore > 70) return "B+"
+            if (averageScore > 65) return "B-"
+            if (averageScore > 60) return "C+"
+            if (averageScore > 55) return "C"
+            if (averageScore > 50) return "C-"
+            if (averageScore > 35) return "D"
+            return "F"
+    }
+
+        let isPassed = scores => !scores.some(score => score < 35);
+
+        function displayInfo () {
+            const table = document.querySelector('.table');
+            table.innerHTML = `
+                <tr>
+                    <th>Name</th>
+                    <th>Grades</th>
+                    <th>Total</th>
+                    <th>Average</th>
+                    <th>grade</th>
+                    <th>statues</th>
+                </tr>
+            `;
+
+            for(const student of students) {
+                let row = document.createElement('tr');
+
+                let nameCell = document.createElement('td');
+                nameCell.textContent = student.fistName;
+                row.appendChild(nameCell);
+
+                let GradesCell = document.createElement('td');
+                GradesCell.textContent = student.grades;
+                row.appendChild(GradesCell);
+
+                let totalGradesCell = document.createElement('td');
+                totalGradesCell.textContent = getTotal(student.grades);
+                row.appendChild(totalGradesCell); 
+
+                let averageGradesCell = document.createElement('td');
+                averageGradesCell.textContent = getAverage(student.grades);
+                row.appendChild(averageGradesCell); 
+
+                let GradeCell = document.createElement('td');
+                GradeCell.textContent = getGrades(student.grades);
+                row.appendChild(GradeCell); 
+
+                let statusCell = document.createElement('td');
+                statusCell.textContent = (isPassed(student.grades)) ? "Passed" : "failed";
+                row.appendChild(statusCell); 
+
+
+                table.append(row);
+            }
+        }
+
+        displayInfo();
+    </script>
+</body>
+</html>

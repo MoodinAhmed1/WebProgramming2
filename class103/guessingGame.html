@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let randomNumber = Math.round(Math.random() * 10)
+        let guess = prompt("enter guess from 1 - 10");
+
+        while(randomNumber != guess) {
+            if(guess > randomNumber) {
+                alert("guess lower")
+                guess = prompt("enter guess");
+            }   else if (guess < randomNumber) {
+                alert("guess Higher");
+                guess = prompt("enter guess from 1 - 10");
+            } else {
+                alert("Congrats you won");
+            }
+        }
+        
+       
+
+    </script>
+</body>
+</html>

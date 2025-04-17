@@ -1,0 +1,209 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Suggestions</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            background-color: rgb(255, 204, 127);
+        }
+        .container {
+            width: 75%;
+            height: fit-content;
+            margin: 150px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: antiquewhite;
+            border-style: solid;
+            border-width: 2px;
+            border-color: black;
+            border-radius: 10px;
+        }
+        input {
+            height: 20px;
+            border-radius: 40px;
+            border-color: black;
+            border-style: solid;
+            padding: 20px 60px;
+        }
+        button {
+            margin-top: 10px;
+        }
+        #movieSelection{
+            display: flex;
+            padding: 20px;
+            margin: 1px;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: center;
+            column-gap: 20px;
+        }
+        .card {
+            padding: 10px;
+            width: 300px;
+            height: 350px;
+
+            display: flex;
+            flex-direction: column;
+
+            border-style: solid;
+            border-width: 2px;
+            border-color: black;
+            border-radius: 10px;
+        }
+
+        .card .row1,
+        .card .row2 {
+            height: 50%;
+        }
+
+        .card .row2 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .card .row2 p {
+            margin: 0;
+            padding: 2px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="header">Movie Suggestions</h1>
+        <input id="age" type="text" placeholder="enter your age">
+        <button onclick="displayOnScreen()">Suggest</button>
+        <div id="movieSelection"></div>
+    </div>
+
+    <script>
+        let movieData = [
+        {
+            category: "Comedy",
+            minAge: 15,
+            maxAge: 50,
+            movies: [
+                { title: "The Mask", year: 1994, rating: 7.5, description: "Cartoonish chaos and laughs." },
+                { title: "Superbad", year: 2007, rating: 7.6, description: "High school shenanigans galore." }
+            ]
+        },
+
+        {
+            category: "Crime",
+            minAge: 18,
+            maxAge: 30,
+            movies: [
+            { title: "Midnight", year: 2021, rating: 8.2, description: "A thrilling tale of revenge and justice." },
+            { title: "Scream", year: 1996, rating: 7.3, description: "Classic horror with a modern twist." },
+            { title: "Get Out", year: 2017, rating: 8.0, description: "Psychological horror with social commentary." },
+            ]
+        },
+        {
+            category: "Animation",
+            minAge: 13,
+            maxAge: 25,
+            movies: [
+            { title: "SpongeBob", year: 2004, rating: 7.0, description: "Underwater laughs and quirky humor." },
+            { title: "Me 2", year: 2013, rating: 7.3, description: "The fun continues with Gru and the Minions." },
+            { title: "PanicMenia", year: 2020, rating: 6.8, description: "Animated chaos meets fun adventure." }
+            ]
+        },
+        {
+            category: "Children",
+            minAge: 3,
+            maxAge: 12,
+            movies: [
+            { title: "Tom and Jerry", year: 1940, rating: 8.0, description: "Cat vs mouse chaos since forever." },
+            { title: "Run Runner", year: 2010, rating: 6.5, description: "Speedy adventures of a bold bunny." },
+            { title: "Beyblade", year: 2002, rating: 7.4, description: "Let it rip with spinning battles!" }
+            ]
+        },
+        {
+            category: "Drama",
+            minAge: 16,
+            maxAge: 65,
+            movies: [
+            { title: "The Pursuit of Happyness", year: 2006, rating: 8.0, description: "True story of grit and love." },
+            { title: "The Shawshank Redemption", year: 1994, rating: 9.3, description: "Hope is a powerful thing." }
+            ]
+        },
+        {
+            category: "Sci-Fi",
+            minAge: 15,
+            maxAge: 40,
+            movies: [
+            { title: "Inception", year: 2010, rating: 8.8, description: "Dream within a dream." },
+            { title: "Interstellar", year: 2014, rating: 8.6, description: "Space travel meets love and physics." }
+            ]
+        }
+        ];
+
+        let suggetsMovieBasedOnAge = age => {
+            let matchedCategories = movieData.filter(data => age >= data.minAge && age <= data.maxAge);
+
+            if (matchedCategories.length === 0) return [];
+
+
+            let randomCategory = matchedCategories[Math.floor(Math.random() * matchedCategories.length)]
+            let movies = randomCategory.movies;
+
+            if (movies.length === 0) return [];
+
+            let movie1 = movies[Math.floor(Math.random() * movies.length)];
+            let movie2 = movies[Math.floor(Math.random() * movies.length)];
+
+            while (movie1 === movie2) {
+                movie2 = movies[Math.floor(Math.random() * movies.length)];
+            }
+
+            return [movie1, movie2].map(movie => ({...movie, category: randomCategory.category}));
+        }
+
+        let displayOnScreen = () => {
+            let age = parseInt(document.getElementById('age').value);
+            let movieSelection = document.getElementById('movieSelection');
+            
+            document.getElementById('age').value = "";
+
+            if(isNaN(age) || age < 0) {
+                movieSelection.innerHTML = "<p>Please enter a valid age.</p>";
+                return ;
+            }
+
+            let suggetstedMovies = suggetsMovieBasedOnAge(age);
+
+            if (suggetstedMovies.length === 0 ) {
+                movieSelection.innerHTML =  "there are no movies in this age range try again"
+                return;
+            }
+
+            movieSelection.innerHTML = "";
+
+            suggetstedMovies.forEach(movie => {
+                movieSelection.innerHTML += `
+                    <div class="card">
+                        <div class="row1">
+                            <img src="https://via.placeholder.com/150" alt="${movie.title}">
+                        </div>
+                        <div class="row2">
+                            <p><strong>Title</strong> : ${movie.title}</p>
+                            <p><strong>category</strong> : ${movie.category}</p>
+                            <p><strong>year</strong> : ${movie.year}</p>
+                            <p><strong>description : </strong>${movie.description}</p>
+                            <p><strong>rating : </strong>${movie.rating}</p>
+                        </div>
+                    </div>
+                `;
+            })
+        }
+    </script>
+</body>
+</html>

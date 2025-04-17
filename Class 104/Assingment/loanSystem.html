@@ -1,0 +1,144 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOAN SYSTEM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        *{
+            box-sizing: content-box;
+        }
+        .applicant {
+            width: 230px;
+            height: 300px;
+
+            padding: 10px;
+            
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h3, p{
+            margin-top : 0.1em;
+            margin-bottom : 0.1em;
+            text-align: center;
+        }
+        .red h3{
+            color: red;
+        }
+        .red {
+            border: 3px solid red;
+        }
+        .green {
+            border: 3px solid green;
+        }
+        .green h3 {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container p-4" id="applicantList">
+        <h1 class="text-center p-4">My Loan System</h1>
+        <div class="row gap-4 justify-content-center"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <script>
+        const person = [
+            {firstName: "Mohammed Ahmed", income: 20000, loan: 10000, duration:1},
+            {firstName: "Tamerat Desta", income: 30000, loan: 10000, duration:1},
+            {firstName: "Rophnan", income: 50000, loan: 10000, duration:1},
+            {firstName: "Teddy Afro", income: 1000, loan: 10000, duration:1},
+        ]
+
+        let isEligable = person => person.income > 10000;
+
+        let calculateIntrest = person => {
+            if (person.income <= 20000) return 0.05;
+            else if (person.income <= 30000) return 0.07;
+            else return 0.1;
+        }
+
+        let moneyToBeReturned = person => {
+            let intrest = calculateIntrest(person);
+            let total = person.loan + intrest * person.loan * person.duration
+            let perMonth = (total / (person.duration * 12)).toFixed(2)
+
+            return {total , perMonth} 
+
+            //When the key name and variable name are the same, JavaScript allows the shorthand. But the full form just writes both out. just like the one above this line, and the line below is the normal form of returning the object    
+
+            /*
+                return {
+                    total : total;
+                    perMonth : perMonth;
+                }
+            */
+        }
+
+        let approvedApplicant = person.filter(isEligable).map(person => {
+            let rate = calculateIntrest(person);
+            
+            let {total, perMonth} = moneyToBeReturned(person);
+            //the line above resembles the line below, The variable names on the left (like total and perMonth) must match the property names in the object you're unpacking from.
+            /* 
+                let result = moneyToBeReturned(person);
+                let total = result.total;
+                let perMonth = result.perMonth;
+            */
+
+            return {
+                ...person, // Spread Operator in Object Return, "Copy everything from the person object into this new object."
+                intrestRate : rate,
+                totalToBePaid : total,
+                monthlyPayment : perMonth,
+                status : "approved"
+            }
+        })
+
+        let notApprovedApplicants = person.filter(p => !isEligable(p)).map(person => {
+            return {
+                ...person,
+                status : "not approved"
+            }
+        })
+
+        let allApplicants = [...approvedApplicant, ...notApprovedApplicants];
+
+        let applicantList = document.querySelector(".row");
+
+        allApplicants.forEach(app => {
+            let applicantInfo = ``;
+
+            if(isEligable(app)) {
+                applicantInfo += `
+                    <div class="applicant col-md-3 green">
+                        <i class="bi bi-file-person text-center fs-1"></i>
+                        <h3>${app.firstName}</h3>
+                        <p><strong>Status</strong> : ${app.status}</p>
+                        <p><strong>interest Rate</strong> : ${Math.round(app.intrestRate * 100)}%</p>
+                        <p><strong>Total to be paid</strong> : ${app.totalToBePaid}</p>
+                        <p><strong>Monthy payment</strong> : ${app.monthlyPayment}</p>
+                        <p><strong>Duration</strong> : ${app.duration} years</p>
+                    </div>
+                `
+            } else {
+                applicantInfo += `
+                    <div class="applicant col-md-3 red">
+                        <i class="bi bi-file-person text-center fs-1"></i>
+                        <h3>${app.firstName}</h3>
+                        <p><strong>Status</strong> : ${app.status}</p>
+                    </div>
+                `
+            }
+
+            applicantList.innerHTML += applicantInfo;
+        })
+    </script>
+</body>
+</html>
