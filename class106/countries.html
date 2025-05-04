@@ -1,0 +1,55 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <style>
+        img{
+            height: 100px;
+            object-fit: cover;
+        }
+        .country-card:hover{
+            transform: scale(1.1);
+        }
+        .country-card{
+            transition: 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div id="countries" class="row g-4 p-5">
+        
+    </div>
+
+    <script>
+        const countriesContainer = document.getElementById("countries");
+        fetch('https://restcountries.com/v3.1/all')
+            .then(result => {
+                return result.json();
+            })
+            .then (countries => {
+                countries.forEach(country => {
+                   display(country)
+                })
+            })
+
+        
+
+            function display(country){
+                const col = document.createElement('div');
+                col.className = 'col-6 col-md-4 col-lg-3';
+
+                col.innerHTML = `
+                    <div class="card country-card shadow-sm" onclick="fetchWiki('${country.name.common}')">
+                    <img src="${country.flags.png}" class="card-img-top flag-img" alt="Flag of ${country.name.common}">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">${country.name.common}</h6>
+                    </div>
+                    </div>
+                `;
+                countriesContainer.appendChild(col);
+            }
+    </script>
+</body>
+</html>

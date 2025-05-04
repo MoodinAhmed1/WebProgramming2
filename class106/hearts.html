@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Playing Cards - Pure JS</title>
+  <style>
+    body {
+      background: #f0f0f0;
+      font-family: sans-serif;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 200px);
+      grid-gap: 3em;
+      justify-content: center;
+      margin-top: 3em;
+    }
+    .grid-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 2fr 1fr;
+      grid-gap: 5px;
+      background-color: white;
+      color: black;
+      font-size: 1.5em;
+      padding: 10px;
+      border-radius: 5%;
+      box-shadow: 0px 5px 15px grey;
+    }
+    .heart {
+      text-align: center;
+      align-self: center;
+      font-size: 2em;
+      color: red;
+    }
+    .top-left, .top-right {
+      padding: 0.1em;
+    }
+    .bottom-right {
+      align-self: end;
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+
+<h1 style="text-align:center">Playing Cards using JS (One Heart)</h1>
+
+<script>
+  // Simplified data: card value and number of hearts
+  const cards = [
+    { value: 'A'},
+    { value: '2'},
+    { value: '3'},
+    { value: '4'},
+    { value: '5'},
+    { value: '6'},
+    { value: '7'},
+    { value: '8'},
+    { value: '9'},
+    { value: '10'},
+    { value: 'J'},
+    { value: 'Q'},
+    { value: 'K'},
+  ];
+
+  // 1. Create grid-container
+  const container = document.createElement('div');
+  container.className = 'grid-container';
+  document.body.appendChild(container);
+
+  // 2. Loop through each card
+  cards.forEach(card => {
+    const gridItem = document.createElement('div');
+    gridItem.className = 'grid-item';
+
+    // 3. Create a 3x3 grid (9 cells/ 9 empty cells)
+    const gridCells = Array.from({ length: 9 }, () => document.createElement('div'));
+
+    // 4. Top-left (index 0)
+    const topLeft = gridCells[0];
+    topLeft.className = 'top-left';
+    topLeft.innerHTML = `${card.value}<br><div style="color:red;">♥</div>`;
+
+    // 5. Bottom-right (index 8)
+    const bottomRight = gridCells[8];
+    bottomRight.className = 'bottom-right';
+    bottomRight.innerHTML = `${card.value}<br><div style="color:red;">♥</div>`;
+
+    // 6. Add one heart to the center (index 4)
+    const centerHeart = gridCells[4];
+    centerHeart.className = 'heart';
+    centerHeart.textContent = '♥';
+
+    // 7. Append all the grid cells to the grid item
+    gridCells.forEach(cell => gridItem.appendChild(cell));
+
+    // 8. Append the grid item to the container
+    container.appendChild(gridItem);
+  });
+</script>
+
+</body>
+</html>
