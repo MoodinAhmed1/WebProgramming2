@@ -92,6 +92,106 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+
+    //function to start game
+    function start() {
+      //hide my start button
+      document.querySelector(`#startbtn`).style.display = "none";
+
+      //generate fresh batch of random numbers
+      numbers = generate_numbers();
+
+      //display the numbers
+      showNumbers(numbers);
+
+      //after 10 seconds hide the numbers and display the input feilds
+      setTimeout(() => {
+        hideNumbers ();
+        generateInputFields();
+      }, 3000);
+
+      //after 10 seconds collect the input and display result
+      setTimeout(() => {
+        showResult ();
+      }, 13000);
+    }
+
+    //function to show the numbers
+    function showNumbers (numbers) {
+      for (let i = 0; i < numbers.length; i++) {
+        document.querySelector(`#numberValue${i}`).innerHTML = numbers[i];
+      }
+    }
+
+    //function to hideTheNumbers
+    function hideNumbers () {
+      document.querySelectorAll(`.numberss`).forEach(element => {
+          element.innerHTML = "";
+        })
+    }
+
+    //function to showResult
+    function showResult () {
+      if (document.querySelector('#resultDiv')) return;
+
+      let answers = [];
+        //get userInput
+        for(let i = 0; i < numbers.length; i++) {
+          let userInput = parseInt(document.querySelector(`#input${i}`).value);
+          answers.push(userInput);
+        }
+
+        //hide userInputFeild and submit button
+        for(let i = 0; i < numbers.length; i++) {
+          document.querySelector(`#inputContainer${i}`).style.display = "none";
+        }
+
+        //display results
+        let resultDiv = document.createElement("div");
+        resultDiv.id = "resultDiv";
+        resultDiv.style.textAlign = "center";
+        
+        for(let i = 0; i < numbers.length; i++) {
+          let result = document.createElement("div");
+
+          if (isNaN(answers[i])) {
+            result.innerHTML = `<h4 class="bg-black m-1 p-2" style="color:yellow;">you haven't entered <strong>anything</strong>, the answer was ${numbers[i]}</h4>`
+          } else if (answers[i] == numbers[i]) {
+            result.innerHTML = `<h4 class="bg-black m-1 p-2" style="color:green;">you got it <strong>correct</strong> it was ${numbers[i]}</h4>`
+          } else {
+            result.innerHTML = `<h4 class="bg-black m-1 p-2" style="color:red;">you got it <strong>wrong</strong> it was ${numbers[i]}</h4>`
+          }
+
+          resultDiv.append(result);
+        }
+
+        let restartButton = document.createElement('button');
+        restartButton.innerHTML = "Restart game";
+        restartButton.id= "restartBtn";
+        restartButton.className = "btn btn-primary mt-3"
+        restartButton.onclick = restart;
+
+        const mainContainer = document.querySelector('.mainContainer');
+        mainContainer.appendChild(resultDiv);
+        mainContainer.appendChild(restartButton);
+
+
+        document.querySelector('#submitBtn').remove();
+    }
+    
+    //function to restart the game
+    function restart() {
+      const resultDiv = document.querySelector('#resultDiv');
+      const restartBtn = document.querySelector('#restartBtn');
+      const oldInputContainer = document.querySelector('#inputContainer');
+
+      if (oldInputContainer) oldInputContainer.remove();
+      if (resultDiv) resultDiv.remove();
+      if (restartBtn) restartBtn.remove();
+
+      start();
+    }
+
     //function to generate random numbers
     const generate_numbers = () => {
       let numbers = [];
@@ -105,7 +205,7 @@
     };
     //initialize randomNumbers
     let numbers = generate_numbers();
-
+    
     //function to generate the initial cards
     const generateCards = () => {
     const titles = ["New Orders", "Customers", "Ticket Resolved", "Revenue Today"]
@@ -149,9 +249,17 @@
 
         document.getElementById('card_holder').appendChild(card);
       });
-   }
 
-    //function to generate inputFeilds
+      //create start game button
+      const button = document.createElement('button');
+      button.id = "startbtn";
+      button.innerText = "Start Game";
+      button.className = "btn btn-primary mt-3";
+      button.onclick = start;
+      document.querySelector('.mainContainer').append(button)
+   }
+    
+   //function to generate inputFeilds
     function generateInputFields() {
       //create inputfeild container
       const inputContainer = document.createElement('div');
@@ -188,103 +296,8 @@
       document.querySelector('.mainContainer').appendChild(inputContainer);
     }
 
-    function restart() {
-      const resultDiv = document.querySelector('#resultDiv');
-      const restartBtn = document.querySelector('#restartBtn');
-      const oldInputContainer = document.querySelector('#inputContainer');
-
-      if (oldInputContainer) oldInputContainer.remove();
-      if (resultDiv) resultDiv.remove();
-      if (restartBtn) restartBtn.remove();
-
-      start();
-    }
-
-    //function to start game
-    function start() {
-      //hide my start button
-      document.querySelector(`#startbtn`).style.display = "none";
-
-      //generate fresh batch of random numbers
-      numbers = generate_numbers();
-
-      //display rhe numbers
-      for (let i = 0; i < numbers.length; i++) {
-        document.querySelector(`#numberValue${i}`).innerHTML = numbers[i];
-      }
-
-      //after 10 seconds hide the numbers and display the input feilds
-      setTimeout(() => {
-        document.querySelectorAll(`.numberss`).forEach(element => {
-          element.innerHTML = "";
-        })
-        generateInputFields();
-      }, 3000);
-
-      //after 30 seconds collect the input and display result
-      setTimeout(() => {
-        showResult ();
-      }, 10000);
-    }
-
-    function showResult () {
-      if (document.querySelector('#resultDiv')) return;
-
-      let answers = [];
-        //get userInput
-        for(let i = 0; i < numbers.length; i++) {
-          let userInput = parseInt(document.querySelector(`#input${i}`).value);
-          answers.push(userInput);
-        }
-
-        //hide userInputFeild and submit button
-        for(let i = 0; i < numbers.length; i++) {
-          document.querySelector(`#inputContainer${i}`).style.display = "none";
-        }
-
-        //display results
-        let resultDiv = document.createElement("div");
-        resultDiv.id = "resultDiv";
-        resultDiv.style.textAlign = "center";
-        
-        for(let i = 0; i < numbers.length; i++) {
-          let result = document.createElement("div");
-
-          if (isNaN(answers[i])) {
-            result.innerHTML = `<h4 class="bg-black m-0 p-2" style="color:yellow;">you haven't entered <strong>anything</strong>, the answer was ${numbers[i]}</h4>`
-          } else if (answers[i] == numbers[i]) {
-            result.innerHTML = `<h4 class="bg-black m-0 p-2" style="color:green;">you got it <strong>correct</strong> it was ${numbers[i]}</h4>`
-          } else {
-            result.innerHTML = `<h4 class="bg-black m-0 p-2" style="color:red;">you got it <strong>wrong</strong> it was ${numbers[i]}</h4>`
-          }
-
-          resultDiv.append(result);
-        }
-
-        let restartButton = document.createElement('button');
-        restartButton.innerHTML = "Restart game";
-        restartButton.id= "restartBtn";
-        restartButton.className = "btn btn-primary mt-3"
-        restartButton.onclick = restart;
-
-        const mainContainer = document.querySelector('.mainContainer');
-        mainContainer.appendChild(resultDiv);
-        mainContainer.appendChild(restartButton);
-
-
-        document.querySelector('#submitBtn').remove();
-    }
-
     //generate empty cards
     generateCards();
-
-    //create start game button
-    const button = document.createElement('button');
-    button.id = "startbtn";
-    button.innerText = "Start Game";
-    button.className = "btn btn-primary mt-3";
-    button.onclick = start;
-    document.querySelector('.mainContainer').append(button)
 
   </script> 
 </body>
