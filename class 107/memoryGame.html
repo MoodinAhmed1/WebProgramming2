@@ -111,7 +111,7 @@
     const titles = ["New Orders", "Customers", "Ticket Resolved", "Revenue Today"]
       numbers.forEach((num, i) => {
         const card = document.createElement('div');
-        card.className = 'col-xl-3 col-lg-3 mb-3';
+        card.className = 'col-xl-3 col-lg-3 mb-1';
 
         const cardContent = document.createElement('div');
         cardContent.className = 'card l-bg-cherry';
@@ -155,7 +155,6 @@
     function generateInputFields() {
       //create inputfeild container
       const inputContainer = document.createElement('div');
-      inputContainer.className = 'container mt-5';
 
       //create row for the input feild
       const row = document.createElement('div');
@@ -186,7 +185,7 @@
 
       row.appendChild(submitButton);
       inputContainer.appendChild(row);
-      document.body.appendChild(inputContainer);
+      document.querySelector('.mainContainer').appendChild(inputContainer);
     }
 
     function restart() {
@@ -245,32 +244,33 @@
 
         //display results
         let resultDiv = document.createElement("div");
-        resultDiv.id = "resultDiv"
+        resultDiv.id = "resultDiv";
         resultDiv.style.textAlign = "center";
         
         for(let i = 0; i < numbers.length; i++) {
           let result = document.createElement("div");
 
           if (isNaN(answers[i])) {
-            result.innerHTML = `<h2 style="color:yellow;">you haven't entered anything, the answer was ${answers[i]}</h2>`
+            result.innerHTML = `<h4 class="bg-black m-0 p-2" style="color:yellow;">you haven't entered <strong>anything</strong>, the answer was ${numbers[i]}</h4>`
           } else if (answers[i] == numbers[i]) {
-            result.innerHTML = `<h2 style="color:green;">you got it correct it was ${answers[i]}</h2>`
+            result.innerHTML = `<h4 class="bg-black m-0 p-2" style="color:green;">you got it <strong>correct</strong> it was ${numbers[i]}</h4>`
           } else {
-            result.innerHTML = `<h2 style="color:red;">you got it wrong it was ${answers[i]}</h2>`
+            result.innerHTML = `<h4 class="bg-black m-0 p-2" style="color:red;">you got it <strong>wrong</strong> it was ${numbers[i]}</h4>`
           }
 
           resultDiv.append(result);
         }
 
-        let restartButton = document.createElement('button')
-        restartButton.innerHTML = "Restart game"
-        restartButton.id= "restartBtn"
+        let restartButton = document.createElement('button');
+        restartButton.innerHTML = "Restart game";
+        restartButton.id= "restartBtn";
+        restartButton.className = "btn btn-primary mt-3"
         restartButton.onclick = restart;
 
+        const mainContainer = document.querySelector('.mainContainer');
+        mainContainer.appendChild(resultDiv);
+        mainContainer.appendChild(restartButton);
 
-        //append our result to html body
-        document.body.append(resultDiv);
-        document.body.append(restartButton);
 
         document.querySelector('#submitBtn').remove();
     }
@@ -280,8 +280,9 @@
 
     //create start game button
     const button = document.createElement('button');
-    button.id = "startbtn"
-    button.innerText = "Start Game"
+    button.id = "startbtn";
+    button.innerText = "Start Game";
+    button.className = "btn btn-primary mt-3";
     button.onclick = start;
     document.querySelector('.mainContainer').append(button)
 
