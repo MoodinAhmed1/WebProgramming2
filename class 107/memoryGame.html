@@ -178,6 +178,13 @@
         row.appendChild(inputGroup);
       }
 
+      const submitButton = document.createElement('button');
+      submitButton.id = "submitBtn";
+      submitButton.className = 'btn btn-primary mt-3';
+      submitButton.onclick = showResult;
+      submitButton.innerHTML = "submit";
+
+      row.appendChild(submitButton);
       inputContainer.appendChild(row);
       document.body.appendChild(inputContainer);
     }
@@ -207,7 +214,7 @@
         document.querySelector(`#numberValue${i}`).innerHTML = numbers[i];
       }
 
-      //after 3 seconds hide the numbers and display the input feilds
+      //after 10 seconds hide the numbers and display the input feilds
       setTimeout(() => {
         document.querySelectorAll(`.numberss`).forEach(element => {
           element.innerHTML = "";
@@ -215,9 +222,16 @@
         generateInputFields();
       }, 3000);
 
-      //after 6 seconds collect the input and display result
+      //after 30 seconds collect the input and display result
       setTimeout(() => {
-        let answers = [];
+        showResult ();
+      }, 10000);
+    }
+
+    function showResult () {
+      if (document.querySelector('#resultDiv')) return;
+
+      let answers = [];
         //get userInput
         for(let i = 0; i < numbers.length; i++) {
           let userInput = parseInt(document.querySelector(`#input${i}`).value);
@@ -242,7 +256,7 @@
           } else if (answers[i] == numbers[i]) {
             result.innerHTML = `<h2 style="color:green;">you got it correct it was ${answers[i]}</h2>`
           } else {
-            result.innerHTML = `<h2 style="color:red;">you got it wrong it was ${numbers[i]}</h2>`
+            result.innerHTML = `<h2 style="color:red;">you got it wrong it was ${answers[i]}</h2>`
           }
 
           resultDiv.append(result);
@@ -257,7 +271,8 @@
         //append our result to html body
         document.body.append(resultDiv);
         document.body.append(restartButton);
-      }, 10000);
+
+        document.querySelector('#submitBtn').remove();
     }
 
     //generate empty cards
@@ -271,7 +286,6 @@
     document.querySelector('.mainContainer').append(button)
 
   </script> 
-
 </body>
 
 </html>
