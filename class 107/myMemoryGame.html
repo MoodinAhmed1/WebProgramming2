@@ -6,24 +6,35 @@
 </head>
 <body>
     <script>
+        let level = [
+            {showTime: 15000, answerTime: 14000, range: 4},
+            {showTime: 14000, answerTime: 13000, range: 5},
+            {showTime: 13000, answerTime: 12000, range: 6},
+            {showTime: 12000, answerTime: 11000, range: 7},
+            {showTime: 11000, answerTime: 10000, range: 8}
+        ]
+        
+        let currentLevel = parseInt(localStorage.getItem('currentLevel')) || 0;
+        let {showTime, answerTime, range} = level[currentLevel];
+
         const cardContainer = document.createElement('div');
-        cardContainer.id = "card_holder";    
-        cardContainer.style.display = "flex";
-        cardContainer.style.justifyContent = "center"
-        cardContainer.style.columnGap = "3px";
+            cardContainer.id = "card_holder";    
+            cardContainer.style.display = "flex";
+            cardContainer.style.justifyContent = "center"
+            cardContainer.style.columnGap = "3px";
         document.body.appendChild(cardContainer);
 
-        function randomNumberGenerator () {
+        function randomNumberGenerator (range) {
             let randomNumbers = [];
 
-            for(let i = 0; i < 4; i++) {
+            for(let i = 0; i < range; i++) {
                 let num = Math.floor(Math.random() * 100);
                 randomNumbers.push(num);
             }             
 
             return randomNumbers;
         }
-        let exampleArray = randomNumberGenerator();
+        let exampleArray = randomNumberGenerator(range);
 
         exampleArray.forEach((element, i) => {
             const card = document.createElement('div');
@@ -37,42 +48,77 @@
 
             const number = document.createElement('p')
                 number.id = `number${i}`
-                number.innerHTML = element;
+                number.innerHTML = "";
                 number.style.fontSize= "40px";
 
             card.appendChild(number);
             cardContainer.appendChild(card);
         })
 
-        setTimeout(() => {
+        const startButton = document.createElement('button');
+            startButton.id = "startButton";
+            startButton.innerHTML = "start game";
+            startButton.onclick = startGame;
+        document.body.appendChild(startButton);
+
+        const resetbutton = document.createElement('button');
+            resetbutton.id = "resetButton";
+            resetbutton.innerHTML = "restart"
+            resetbutton.style.marginLeft = "10px"
+            resetbutton.onclick = resetGame;
+        document.body.appendChild(resetbutton);
+
+        function startGame () {
+            const startButton = document.querySelector('#startButton');
+            if(startButton) startButton.remove();
+
             for(let i = 0; i < exampleArray.length; i++) {
-                document.querySelector(`#number${i}`).innerHTML = "?";
+                document.querySelector(`#number${i}`).innerHTML = exampleArray[i];
             }
-            generateInputField ();
-        }, 3000)
+
+            setTimeout(() => {
+                for(let i = 0; i < exampleArray.length; i++) {
+                    document.querySelector(`#number${i}`).innerHTML = "?";
+                }
+
+                generateInputField ();
+            }, 3000)
+        }
+
+        function resetGame () {
+            if(document.querySelector('#resultDiv')) document.querySelector('#resultDiv').remove();
+            if(document.querySelector('#inputContainer')) document.querySelector('#inputContainer').remove();
+
+            localStorage.removeItem("currentLevel");
+            location.reload();
+        }
 
         function generateInputField () {
             const inputContainer = document.createElement('div');
-            inputContainer.style.display = "flex";
-            inputContainer.style.justifyContent = "center"
-            inputContainer.style.columnGap = "25px";
-            inputContainer.style.marginTop = "5px"
+                inputContainer.id = "inputContainer"
+                inputContainer.style.display = "flex";
+                inputContainer.style.flexWrap = "wrap"
+                inputContainer.style.justifyContent = "center"
+                inputContainer.style.columnGap = "25px";
+                inputContainer.style.rowGap = "25px";
+                inputContainer.style.marginTop = "5px"
 
             
             exampleArray.forEach((element, i) => {
                 const input = document.createElement('input');
                 input.id = `input${i}`;
                 input.placeholder = "enter number";
+                input.style.padding = "10px"
                 inputContainer.appendChild(input);
             })
 
             const button = document.createElement('button');
-            button.id = "submitButton";
-            button.innerHTML = "submit";
-            button.style.padding = "10px";
-            button.style.backgroundColor = "blue";
-            button.onclick = displayResults;
-            inputContainer.appendChild(button);
+                button.id = "submitButton";
+                button.innerHTML = "submit";
+                button.style.padding = "10px";
+                button.style.backgroundColor = "blue";
+                button.onclick = displayResults;
+                inputContainer.appendChild(button);
 
             document.body.appendChild(inputContainer);
         }
@@ -87,30 +133,45 @@
         }
 
         function displayResults() {
-            const divResult = document.querySelector('#resultDiv');
-            if(divResult) divResult.remove();
+            if(document.querySelector('#resultDiv')) document.querySelector('#resultDiv').remove();
 
             let resultDiv = document.createElement('div')
-            resultDiv.id = "resultDiv"
+                resultDiv.id = "resultDiv"
             document.body.appendChild(resultDiv)
 
             let answers = getAnswers();
+            let correctAnswer = 0;
 
             for(let i = 0; i < exampleArray.length; i++) {
                 const result = document.createElement('p');
-                result.style.color = "white";
-                result.style.fontSize = " 20px"
-                result.style.backgroundColor = "black";
-                result.style.padding = "20px";
+                    result.style.color = "white";
+                    result.style.fontSize = " 20px"
+                    result.style.backgroundColor = "black";
+                    result.style.padding = "20px";
 
                 if(answers[i] == exampleArray[i]) {
                     result.innerHTML = "you got it correct the asnwer was " + exampleArray[i]
-                }
-                else{
-                    result.innerHTML = "you got it incorrect the asnwer was " + exampleArray[i]
+                    correctAnswer++;
+                } else {
+                    result.innerHTML = "you got it incorrect the asnwer was " + exampleArray[i];
                 }
                 resultDiv.appendChild(result);
             }
+            
+            const messageDiv = document.createElement('div');
+            if(correctAnswer == answers.length) {
+                currentLevel++;
+                if (currentLevel < level.length) {
+                    messageDiv.innerText = "Congrats you've won!";
+                    localStorage.setItem("currentLevel", currentLevel);
+                    setTimeout(() => location.reload(), 3000);
+                } else {
+                    messageDiv.innerHTML = "congrats you've finished all the levels!";
+                }
+            } else {
+                messageDiv.innerText = "❌ Try again!";
+            }
+            document.body.appendChild(messageDiv);
         }
     </script>
 </body>
