@@ -1,0 +1,117 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const cardContainer = document.createElement('div');
+        cardContainer.id = "card_holder";    
+        cardContainer.style.display = "flex";
+        cardContainer.style.justifyContent = "center"
+        cardContainer.style.columnGap = "3px";
+        document.body.appendChild(cardContainer);
+
+        function randomNumberGenerator () {
+            let randomNumbers = [];
+
+            for(let i = 0; i < 4; i++) {
+                let num = Math.floor(Math.random() * 100);
+                randomNumbers.push(num);
+            }             
+
+            return randomNumbers;
+        }
+        let exampleArray = randomNumberGenerator();
+
+        exampleArray.forEach((element, i) => {
+            const card = document.createElement('div');
+                card.id = "card";
+                card.style.width = "200px";
+                card.style.height = "200px";
+                card.style.display = "flex";
+                card.style.justifyContent = "center"
+                card.style.alignItems = "center";
+                card.style.backgroundColor = "gray";
+
+            const number = document.createElement('p')
+                number.id = `number${i}`
+                number.innerHTML = element;
+                number.style.fontSize= "40px";
+
+            card.appendChild(number);
+            cardContainer.appendChild(card);
+        })
+
+        setTimeout(() => {
+            for(let i = 0; i < exampleArray.length; i++) {
+                document.querySelector(`#number${i}`).innerHTML = "?";
+            }
+            generateInputField ();
+        }, 3000)
+
+        function generateInputField () {
+            const inputContainer = document.createElement('div');
+            inputContainer.style.display = "flex";
+            inputContainer.style.justifyContent = "center"
+            inputContainer.style.columnGap = "25px";
+            inputContainer.style.marginTop = "5px"
+
+            
+            exampleArray.forEach((element, i) => {
+                const input = document.createElement('input');
+                input.id = `input${i}`;
+                input.placeholder = "enter number";
+                inputContainer.appendChild(input);
+            })
+
+            const button = document.createElement('button');
+            button.id = "submitButton";
+            button.innerHTML = "submit";
+            button.style.padding = "10px";
+            button.style.backgroundColor = "blue";
+            button.onclick = displayResults;
+            inputContainer.appendChild(button);
+
+            document.body.appendChild(inputContainer);
+        }
+
+        function getAnswers () {
+            let answers = [];
+            for(let i = 0; i < exampleArray.length; i++) {
+                let answer = parseInt(document.querySelector(`#input${i}`).value)
+                answers.push(answer);
+            }
+            return answers;
+        }
+
+        function displayResults() {
+            const divResult = document.querySelector('#resultDiv');
+            if(divResult) divResult.remove();
+
+            let resultDiv = document.createElement('div')
+            resultDiv.id = "resultDiv"
+            document.body.appendChild(resultDiv)
+
+            let answers = getAnswers();
+
+            for(let i = 0; i < exampleArray.length; i++) {
+                const result = document.createElement('p');
+                result.style.color = "white";
+                result.style.fontSize = " 20px"
+                result.style.backgroundColor = "black";
+                result.style.padding = "20px";
+
+                if(answers[i] == exampleArray[i]) {
+                    result.innerHTML = "you got it correct the asnwer was " + exampleArray[i]
+                }
+                else{
+                    result.innerHTML = "you got it incorrect the asnwer was " + exampleArray[i]
+                }
+                resultDiv.appendChild(result);
+            }
+        }
+    </script>
+</body>
+</html>
