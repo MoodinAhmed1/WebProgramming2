@@ -10,7 +10,7 @@
             object-fit: cover;
         }
         .country-card:hover{
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
         .country-card{
             transition: 0.2s;
@@ -18,9 +18,13 @@
     </style>
 </head>
 <body>
-    <div id="countries" class="row g-4 p-5">
+    <div class="container">
+        <h1 class="text-center mt-4">Countries</h1>
+        <div id="countries" class="row g-4">
         
+        </div>
     </div>
+    
 
     <script>
         const countriesContainer = document.getElementById("countries");
@@ -42,10 +46,10 @@
 
                 col.innerHTML = `
                     <div class="card country-card shadow-sm" onclick="fetchWiki('${country.name.common}')">
-                    <img src="${country.flags.png}" class="card-img-top flag-img" alt="Flag of ${country.name.common}">
-                    <div class="card-body text-center">
-                        <h6 class="card-title">${country.name.common}</h6>
-                    </div>
+                        <img src="${country.flags.png}" class="card-img-top flag-img" alt="Flag of ${country.name.common}">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">${country.name.common}</h6>
+                        </div>
                     </div>
                 `;
                 countriesContainer.appendChild(col);
